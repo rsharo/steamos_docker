@@ -29,7 +29,7 @@ VOLUME [ "/root/steamos" ]
 # customize the "jessie" debootstrap script for brewmaster compatability
 RUN sed -e 's/debian-archive-keyring.gpg/valve-archive-keyring.gpg/' /usr/share/debootstrap/scripts/jessie > ./brewmaster
 
-# Run mkimage.sh under fakeroot/fakechroot so we can avoid making this container privileged
+# Run mkimage.sh under fakechroot so we can avoid making this container privileged
 SHELL [ "/bin/bash" , "-c" ]
 ENTRYPOINT [ "fakechroot", "/usr/share/docker-engine/contrib/mkimage.sh" ]
 
