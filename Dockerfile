@@ -23,20 +23,15 @@ RUN apt-get update && \
 # Retrieve valve-archive-keyring.gpg
 RUN apt-get -y install valve-archive-keyring
 
-# Set up "builder" user
-RUN useradd -ms /bin/bash -d /home/builder builder
-USER builder
-WORKDIR /home/builder
+WORKDIR /root
+VOLUME [ "/root/steamos" ]
 
 # customize the "jessie" debootstrap script for brewmaster compatability
 RUN sed -e 's/debian-archive-keyring.gpg/valve-archive-keyring.gpg/' /usr/share/debootstrap/scripts/jessie > ./brewmaster
 
-RUN mkdir /home/builder/steamos
-VOLUME [ "/home/builder/steamos" ]
-
 # Run mkimage.sh under fakeroot/fakechroot so we can avoid making this container privileged
 SHELL [ "/bin/bash" , "-c" ]
-ENTRYPOINT [ "fakechroot", "fakeroot", "/usr/share/docker-engine/contrib/mkimage.sh" ]
+ENTRYPOINT [ "fakechroot", "/usr/share/docker-engine/contrib/mkimage.sh" ]
 
 # resulting Dockerfile and tarball will be found in /home/builder/steamos
 CMD [ "-d", "steamos", "-t", "steamos", "debootstrap", "--variant=fakechroot", "brewmaster", "http://repo.steampowered.com/steamos", "./brewmaster" ]
