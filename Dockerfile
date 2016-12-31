@@ -33,5 +33,5 @@ RUN sed -e 's/debian-archive-keyring.gpg/valve-archive-keyring.gpg/' /usr/share/
 SHELL [ "/bin/bash" , "-c" ]
 ENTRYPOINT [ "fakechroot", "/usr/share/docker-engine/contrib/mkimage.sh" ]
 
-# resulting Dockerfile and tarball will be found in /home/builder/steamos
+# resulting Dockerfile and tarball will be found in /root/steamos
 CMD [ "-d", "steamos", "-t", "steamos", "debootstrap", "--variant=fakechroot", "brewmaster", "http://repo.steampowered.com/steamos", "./brewmaster" ]
