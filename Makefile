@@ -31,7 +31,7 @@ delete-steamos:
 $(OUTPUT)/rootfs.tar.xz: steamos_buildmach
 	mkdir -p $(OUTPUT)
 	docker run -ti --privileged --name steamos_buildmach \
-		-v $(realpath $(OUTPUT)):/root/steamos steamos_buildmach
+		-v $(abspath $(OUTPUT)):/root/steamos steamos_buildmach
 
 clean-container= $(foreach id, $(shell docker ps -aq -f name="$(1)"), docker rm -f $(id) ; )
 clean-image= $(foreach id, $(shell docker images -q "$(1)"), docker rmi -f $(id) ; )
