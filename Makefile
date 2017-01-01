@@ -8,7 +8,7 @@ all: steamos
 
 distclean: clean
 	$(call clean-image,steamos_buildmach)
-	$(call clean-volume,$(realpath $(OUTPUT)))
+	$(call clean-volume,$(abspath $(OUTPUT)))
 	rm -rf $(OUTPUT)
 
 clean:
