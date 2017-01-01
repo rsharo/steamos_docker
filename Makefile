@@ -30,8 +30,8 @@ steamos_buildmach:
 delete-steamos:
 	$(call check-confirm,"Are you sure you want to delete your steamos container and image?"
 	@echo
-	$(call clean-container,steamos) 
-	$(call clean-image,steamos)
+	$(call clean-container,$(NAME))
+	$(call clean-image,$(NAME))
 
 
 $(BUILDDIR)/rootfs.tar.xz: steamos_buildmach
