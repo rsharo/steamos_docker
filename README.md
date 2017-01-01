@@ -18,8 +18,9 @@ Run "make" (as root) to:
   3. Run the `steamos_buildmach` producing a SteamOS root file system in the `./build/` directory
   4. Build `steamos` image on host
 
+## Makefile Targets
 
-`make` Target | Description
+Target | Description
 --------------|--------
 all | equivalent to "steamos" target
 steamos | Builds the `steamos` image (plus build dependencies)
@@ -28,8 +29,9 @@ clean | Removes any pre-existing `steamos_buildmach` container.  Equivalent to `
 distclean | Removes `steamos_buildmach` container and image. Does not touch any `steamos` images.
 delete-steamos | Removes the `brewmaster` `steamos` container and image.  *Use at your own risk!*
 
+## Makefile Build Parameters
 
-`make` Build Parameter | Default | Description
+Parameter | Default | Description
 -----------------------|---------|-------------
 NAME | brewmaster | Name of the final Docker image
 SUITE | brewmaster | SteamOS version
