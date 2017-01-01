@@ -1,20 +1,14 @@
 
-
 IMAGES= steamos steamos_buildmach
 OUTPUT=./output
 
-.PHONY: all clean clean-buildimage distclean $(IMAGES) 
+.PHONY: all clean distclean delete-steamos $(IMAGES) 
 
 all: steamos
 
-distclean: clean-buildimage
-	$(call clean-container,steamos)
-	$(call clean-image,steamos)
-	@:
-
-clean-buildimage: clean
+distclean: clean
 	$(call clean-image,steamos_buildmach)
-	$(call clean-volume,$(BUILD_PATH))
+	$(call clean-volume,$(realpath $(OUTPUT)))
 	rm -rf $(OUTPUT)
 
 clean:
@@ -27,6 +21,12 @@ steamos: $(OUTPUT)/rootfs.tar.xz
 
 steamos_buildmach:
 	docker build -t $@ .
+
+delete-steamos:
+	@bash -c 'read -n 1 -t 20 -p "Are you sure you want to delete your steamos container and image? [y/N] " response ; [[ "$$response" == "y" ]]'
+	@echo
+	$(call clean-container,steamos) 
+	$(call clean-image,steamos)
 
 $(OUTPUT)/rootfs.tar.xz: steamos_buildmach
 	mkdir -p $(OUTPUT)
