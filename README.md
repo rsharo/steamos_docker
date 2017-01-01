@@ -15,7 +15,7 @@ The filesystem build runs as root inside a container built from the official `de
 Run "make" (as root) to:
   1. Create a build machine based on `debian:jessie`, called `steamos_buildmach`
   2. Load all dependencies needed to build a SteamOS image
-  3. Run the `steamos_buildmach` producing a SteamOS root file system in the `./output/` directory
+  3. Run the `steamos_buildmach` producing a SteamOS root file system in the `./build/` directory
   4. Build `steamos` image on host
 
 
