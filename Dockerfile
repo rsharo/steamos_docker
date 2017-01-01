@@ -16,22 +16,28 @@ RUN apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 7DEE
 	echo 'deb http://repo.steampowered.com/steamos brewmaster main contrib non-free' > /etc/apt/sources.list.d/valve.list
 
 # Tools for building docker images
-RUN apt-get update && \
-	apt-get -y install fakechroot fakeroot debootstrap && \
-	apt-get -y install docker-engine
+RUN apt-get update
+RUN apt-get -y install debootstrap
+RUN apt-get -y install docker-engine
 
 # Retrieve valve-archive-keyring.gpg
 RUN apt-get -y install valve-archive-keyring
 
-WORKDIR /root
-VOLUME [ "/root/steamos" ]
+# We are running in a container -- tweak mkimage.sh so it skips "docker build"
+WORKDIR /usr/share/docker-engine/contrib
+RUN sed -e 's/docker build/echo SKIPPING docker build/' mkimage.sh > mkimage_contained.sh
+RUN chmod 555 mkimage_contained.sh
 
 # customize the "jessie" debootstrap script for brewmaster compatability
-RUN sed -e 's/debian-archive-keyring.gpg/valve-archive-keyring.gpg/' /usr/share/debootstrap/scripts/jessie > ./brewmaster
+RUN sed -e 's/debian-archive-keyring.gpg/valve-archive-keyring.gpg/' /usr/share/debootstrap/scripts/jessie > /root/brewmaster
 
-# Run mkimage.sh under fakechroot so we can avoid making this container privileged
+# The following volume is mounted from the Makefile
+#VOLUME [ "/root/steamos" ]
+
+WORKDIR /root
 SHELL [ "/bin/bash" , "-c" ]
-ENTRYPOINT [ "fakechroot", "/usr/share/docker-engine/contrib/mkimage.sh" ]
+ENTRYPOINT [ "/usr/share/docker-engine/contrib/mkimage_contained.sh" ]
 
 # resulting Dockerfile and tarball will be found in /root/steamos
-CMD [ "-d", "steamos", "-t", "steamos", "debootstrap", "--variant=fakechroot", "brewmaster", "http://repo.steampowered.com/steamos", "./brewmaster" ]
+CMD [ "-d", "steamos", "-t", "steamos", "debootstrap", "--variant=minbase", "brewmaster", "http://repo.steampowered.com/steamos", "./brewmaster" ]
+
