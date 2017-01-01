@@ -1,39 +1,43 @@
+include functs.mk
+
+# Build parameters
+SUITE=brewmaster
+VARIANT=minbase
+STEAMREPO=http://repo.steampowered.com/steamos
+NAME=$(SUITE)
 
 IMAGES= steamos steamos_buildmach
-OUTPUT=./output
-
-.PHONY: all clean distclean delete-steamos $(IMAGES) 
+BUILDDIR=./build
 
 all: steamos
 
 distclean: clean
-	$(call clean-image,steamos_buildmach)
-	$(call clean-volume,$(abspath $(OUTPUT)))
-	rm -rf $(OUTPUT)
+	$(MAKE) -C steamos_buildmach distclean
+	rm -rf "$(BUILDDIR)"
 
 clean:
-	$(call clean-container,steamos_buildmach)
-	@:
+	$(MAKE) -C steamos_buildmach clean
+	rm -f steamos/rootfs.tar.xz
 
-steamos: $(OUTPUT)/rootfs.tar.xz
-	cp -f Dockerfile.steamos $(OUTPUT)/Dockerfile
-	docker build -t $@ $(OUTPUT)
+steamos: $(BUILDDIR)/rootfs.tar.xz
+	cp "$(BUILDDIR)/rootfs.tar.xz" steamos/rootfs.tar.xz
+	docker build -t "$(NAME)" ./steamos
 
 steamos_buildmach:
-	docker build -t $@ .
+	$(MAKE) -C steamos_buildmach all
+
 
 delete-steamos:
-	@bash -c 'read -n 1 -t 20 -p "Are you sure you want to delete your steamos container and image? [y/N] " response ; [[ "$$response" == "y" ]]'
+	$(call check-confirm,"Are you sure you want to delete your steamos container and image?"
 	@echo
 	$(call clean-container,steamos) 
 	$(call clean-image,steamos)
 
-$(OUTPUT)/rootfs.tar.xz: steamos_buildmach
-	mkdir -p $(OUTPUT)
+
+$(BUILDDIR)/rootfs.tar.xz: steamos_buildmach
+	mkdir -p $(BUILDDIR)
 	docker run -ti --privileged --name steamos_buildmach \
-		-v $(abspath $(OUTPUT)):/root/steamos steamos_buildmach
+		-v "$(abspath $(BUILDDIR)):/root/steamos" steamos_buildmach \
+		"--variant=$(VARIANT)" "$(SUITE)" "$(STEAMREPO)"
 
-clean-container= $(foreach id, $(shell docker ps -aq -f name="$(1)"), docker rm -f $(id) ; )
-clean-image= $(foreach id, $(shell docker images -q "$(1)"), docker rmi -f $(id) ; )
-clean-volume= $(foreach id, $(shell docker volume ls -qf name="$(1)"), docker volume rm $(id) ; )
-
+.PHONY: all clean distclean delete-steamos $(IMAGES) 
