@@ -16,7 +16,7 @@ $(IMAGES): % : %.built
 
 $(BUILTFILES):
 	docker build -t $(@:%.built=%) .
-	docker inspect $(@:%.built:%) > $(@)
+	docker inspect $(@:%.built=%) > $(@)
 
 
 .PHONY: all clean distclean $(IMAGES)
