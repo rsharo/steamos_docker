@@ -25,6 +25,7 @@ Target | Description
 all | equivalent to "steamos" target
 steamos | Builds the `steamos` image (plus build dependencies)
 steamos_buildmach | Builds `steamos_buildmach`: the Debian machine that can build `steamos` images.
+debug-buildmach | Runs `steamos_buildmach` with bash tty.
 clean | Removes any pre-existing `steamos_buildmach` container.  Equivalent to `docker rm -f steamos_buildmach`
 distclean | Removes `steamos_buildmach` container and image. Does not touch any `steamos` images.
 delete-steamos | Removes the `steamos` container and image specified by `NAME`.  *Use at your own risk!*
