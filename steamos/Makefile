@@ -1,6 +1,6 @@
 include ../functs.mk
 
-IMAGES= steamos_buildmach
+IMAGES= steamos
 BUILTFILES = $(IMAGES:%=%.built)
 
 all: $(IMAGES)
@@ -14,8 +14,14 @@ clean:
 
 $(IMAGES): $(@:%=%.built)
 
-$(BUILTFILES):
+$(BUILTFILES): 
 	docker build -t $@ .
 	docker inspect $@ > ${@:%=%.built)
+
+steamos.built: rootfs.tar.xz
+
+rootfs.tar.xz:
+	$(error This makefile cannot produce its own rootfs.tar.xz.  \
+		You must provide one or build one from the parent directory.)
 
 .PHONY: all clean distclean $(IMAGES)

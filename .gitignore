@@ -1,2 +1,3 @@
 build
 steamos/rootfs.tar.xz
+**/*.built

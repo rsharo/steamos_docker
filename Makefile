@@ -6,26 +6,36 @@ VARIANT=minbase
 STEAMREPO=http://repo.steampowered.com/steamos
 NAME=$(SUITE)
 
-IMAGES= steamos steamos_buildmach
+IMAGES= steamos steamos_buildmach steambox
 BUILDDIR=./build
 
-all: steamos
+all: steambox
 
 distclean: clean
+	$(MAKE) -C steambox distclean
+	$(MAKE) -C steamos distclean
 	$(MAKE) -C steamos_buildmach distclean
 	rm -rf "$(BUILDDIR)"
 
 clean:
+	$(MAKE) -C steambox clean
+	$(MAKE) -C steamos clean
 	$(MAKE) -C steamos_buildmach clean
 	rm -f steamos/rootfs.tar.xz
 
-steamos: $(BUILDDIR)/rootfs.tar.xz
-	cp "$(BUILDDIR)/rootfs.tar.xz" steamos/rootfs.tar.xz
-	docker build -t "$(NAME)" ./steamos
+
+steamos: steamos/rootfs.tar.xz
+	$(MAKE) -C steamos all
+
 
 steamos_buildmach:
 	$(MAKE) -C steamos_buildmach all
 
+steambox: steamos
+	export STEAMUSER_UID
+	export STEAMUSER_GID
+	export STEAMUSER_PATH
+	$(MAKE) -C steambox
 
 delete-steamos:
 	@$(call check-confirm,"Are you sure you want to delete your steamos container and image?")
@@ -39,6 +49,8 @@ debug-buildmach: steamos_buildmach
 		--entrypoint /bin/bash \
 		steamos_buildmach -i
 
+steamos/rootfs.tar.xz: $(BUILDDIR)/rootfs.tar.xz
+	cp "$(BUILDDIR)/rootfs.tar.xz" steamos/rootfs.tar.xz
 
 $(BUILDDIR)/rootfs.tar.xz: steamos_buildmach
 	mkdir -p $(BUILDDIR)
