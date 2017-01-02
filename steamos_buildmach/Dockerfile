@@ -66,5 +66,6 @@ WORKDIR /root
 SHELL [ "/bin/bash" , "-c" ]
 ENTRYPOINT [ "/usr/share/docker-engine/contrib/mkimage_rootfsonly.sh", "-d", "steamos", "debootstrap" ]
 
-# resulting Dockerfile and tarball will be found in /root/steamos CMD [ "--variant=minbase", "brewmaster", "http://repo.steampowered.com/steamos" ]
+# resulting Dockerfile and tarball will be found in /root/steamos
+CMD [ "--variant=minbase", "brewmaster", "http://repo.steampowered.com/steamos" ]
 
