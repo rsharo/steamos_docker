@@ -63,7 +63,7 @@ steamos_buildmach: steamos_buildmach/steamos_buildmach.built
 
 steambox/steambox.built: steamos/steamos.built
 
-steamos.built: steamos/rootfs.tar.xz
+steamos/steamos.built: steamos/rootfs.tar.xz
 
 steamos/rootfs.tar.xz: $(BUILDDIR)/rootfs.tar.xz
 

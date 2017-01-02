@@ -14,7 +14,7 @@ clean:
 
 $(IMAGES): % : %.built
 
-$(BUILTILES):
+$(BUILTFILES):
 	docker build -t $(@:%.built=%) .
 	docker inspect $(@:%.built:%) > $(@)
 
