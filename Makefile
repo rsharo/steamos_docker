@@ -11,15 +11,28 @@ export STEAMUSER_UID
 export STEAMUSER_GID
 export STEAMUSER_PATH
 
-IMAGES= steamos steamos_buildmach steambox
-BUILTFILES=$(join $(IMAGES:%=%/),$(IMAGES:%=%.built))
+IMAGES= steambox steamos_buildmach
 BUILDDIR=./build
 
 all: steambox
 
-distclean clean:
+steamos: $(BUILDDIR/steamos.built)
+
+$(BUILDDIR/steamos.built): $(BUILDDIR)/Dockerfile $(BUILDDIR)/rootfs.tar.xz
+	docker build -t $(NAME) ./build
+	docker inspect $(NAME) > $(BUILDDIR)/$(NAME).built
+
+steambox: steamos
+
+steambox steamos_buildmach:
+	$(MAKE) -C $(@) all
+
+distclean: clean
 	$(foreach img,$(IMAGES),$(MAKE) -C $(img) $(@);)
-	rm -f steamos/rootfs.tar.xz
+	$(RM) $(BUILDDIR)
+
+clean:
+	$(foreach img,$(IMAGES),$(MAKE) -C $(img) $(@);)
 
 delete-steamos:
 	@$(call check-confirm,"Are you sure you want to delete your steamos container and image?")
@@ -33,10 +46,7 @@ debug-buildmach: steamos_buildmach
 		--entrypoint /bin/bash \
 		steamos_buildmach -i
 
-steamos/rootfs.tar.xz:
-	cp "$(BUILDDIR)/rootfs.tar.xz" steamos/rootfs.tar.xz
-
-$(BUILDDIR)/rootfs.tar.xz:
+$(BUILDDIR)/rootfs.tar.xz: steamos_buildmach
 	mkdir -p $(BUILDDIR)
 	@$(call check-new-container-msg,steamos_buildmach, \
 		"steamos_buildmach already exists. Please run \"make clean\" first.")
@@ -45,27 +55,5 @@ $(BUILDDIR)/rootfs.tar.xz:
 		-v "$(abspath $(BUILDDIR)):/root/steamos" steamos_buildmach \
 		"--variant=$(VARIANT)" "$(SUITE)" "$(STEAMREPO)"
 
-$(BUILTFILES):
-	$(MAKE) -C $(dir $(@)) $(notdir $(@))
-
-.PHONY: all clean distclean delete-steamos debug-buildmach $(IMAGES)
-
-###
-# dependencies
-###
-distclean: clean
-
-steambox: steambox/steambox.built
-
-steamos : steambox/steamos.built
-
-steamos_buildmach: steamos_buildmach/steamos_buildmach.built
-
-steambox/steambox.built: steamos/steamos.built
-
-steamos/steamos.built: steamos/rootfs.tar.xz
-
-steamos/rootfs.tar.xz: $(BUILDDIR)/rootfs.tar.xz
-
-$(BUILDDIR)/rootfs.tar.xz: steamos_buildmach/steamos_buildmach.built
+.PHONY: all clean distclean delete-steamos debug-buildmach steamos $(IMAGES)
 

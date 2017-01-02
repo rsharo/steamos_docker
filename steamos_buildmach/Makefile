@@ -7,7 +7,7 @@ all: $(IMAGES)
 
 distclean: clean
 	$(call clean-images,$(IMAGES))
-	rm -f $(BUILTFILES)
+	$(RM) $(BUILTFILES)
 
 clean:
 	$(call clean-containers,$(IMAGES))
