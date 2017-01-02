@@ -1,5 +1,7 @@
 include ../functs.mk
 
+BOOTSTRAP_STEAMDEPS ?= ./bootstrap_steamdeps.txt
+
 ifeq ("","$(STEAMUSER_UID)")
    $(error you must provide STEAMUSER_UID (the UID of the host account that will be running steamos) to proceed)
 else
@@ -34,10 +36,12 @@ clean:
 
 $(IMAGE): % : %.built
 
-$(BUILTFILE): Dockerfile show_motd
+$(BUILTFILE): Dockerfile show_motd $(BOOTSTRAP_STEAMDEPS) ./Makefile
 	docker build -t $(@:%.built=%) \
-		--build-arg STEAMUSER_UID=$(STEAMUSER_UID) \
-		--build-arg STEAMUSER_GID=$(STEAMUSER_GID) .
+		--build-arg "STEAMUSER_UID=$(STEAMUSER_UID)" \
+		--build-arg "STEAMUSER_GID=$(STEAMUSER_GID)" \
+		--build-arg "BOOTSTRAP_STEAMDEPS=$(BOOTSTRAP_STEAMDEPS)" \
+		.
 	docker inspect $(@:%.built=%) > $(@)
 
 .PHONY: all build clean distclean $(IMAGE)
