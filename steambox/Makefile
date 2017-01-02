@@ -18,25 +18,27 @@ else
    $(info STEAMUSER_HOME=$(STEAMUSER_HOME))
 endif
 
-IMAGES= steambox
-BUILTFILES = $(IMAGES:%=%.built)
+IMAGE= steambox
+BUILTFILE = $(IMAGE:%=%.built)
 
-all: $(IMAGES)
+all: build
+
+build: $(IMAGE)
 
 distclean: clean
-	$(call clean-images,$(IMAGES))
-	$(RM) $(BUILTFILES)
+	$(call clean-image,$(IMAGE))
+	$(RM) $(BUILTFILE)
 
 clean:
-	$(call clean-containers,$(IMAGES))
+	$(call clean-container,$(IMAGE))
 
-$(IMAGES): % : %.built
+$(IMAGE): % : %.built
 
-$(BUILTFILES):
+$(BUILTFILE): Dockerfile
 	docker build -t $(@:%.built=%) \
 		--build-arg STEAMUSER_UID=$(STEAMUSER_UID) \
 		--build-arg STEAMUSER_GID=$(STEAMUSER_GID) .
 	docker inspect $(@:%.built=%) > $(@)
 
-.PHONY: all clean distclean $(IMAGES)
+.PHONY: all build clean distclean $(IMAGE)
 

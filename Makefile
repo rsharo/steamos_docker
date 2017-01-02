@@ -1,44 +1,40 @@
 include functs.mk
 
 # Build parameters
-SUITE=brewmaster
-VARIANT=minbase
-STEAMREPO=http://repo.steampowered.com/steamos
-NAME=$(SUITE)
-
-# These must be given by the caller if building steambox
-export STEAMUSER_UID
-export STEAMUSER_GID
-export STEAMUSER_PATH
+export SUITE ?= brewmaster
+export VARIANT ?= minbase
+export STEAMREPO ?= http://repo.steampowered.com/steamos
+export BASEIMAGE ?= $(SUITE)
+export STEAMUSER_UID STEAMUSER_GID STEAMUSER_PATH
 
 IMAGES= steambox steamos_buildmach
 BUILDDIR=./build
 
 all: steambox
 
-steamos: $(BUILDDIR/steamos.built)
+steambox: baseimage
 
-$(BUILDDIR/steamos.built): $(BUILDDIR)/Dockerfile $(BUILDDIR)/rootfs.tar.xz
-	docker build -t $(NAME) ./build
-	docker inspect $(NAME) > $(BUILDDIR)/$(NAME).built
+baseimage: $(BUILDDIR)/$(BASEIMAGE).built
 
-steambox: steamos
-
-steambox steamos_buildmach:
-	$(MAKE) -C $(@) all
+$(IMAGES):
+	$(MAKE) -C $(@) build
 
 distclean: clean
 	$(foreach img,$(IMAGES),$(MAKE) -C $(img) $(@);)
-	$(RM) $(BUILDDIR)
+	$(RM) -r $(BUILDDIR)
+
 
 clean:
 	$(foreach img,$(IMAGES),$(MAKE) -C $(img) $(@);)
 
-delete-steamos:
-	@$(call check-confirm,"Are you sure you want to delete your steamos container and image?")
-	@echo
-	$(call clean-container,$(NAME))
-	$(call clean-image,$(NAME))
+
+$(BUILDDIR)/$(BASEIMAGE).built: $(BUILDDIR)
+	@if ( $(call check-new-image,$(BASEIMAGE)) ) ; then \
+		echo "Building baseimage $(BASEIMAGE)..." ; \
+		$(MAKE) build-baseimage ; \
+	fi
+	docker inspect $(BASEIMAGE) > $(BUILDDIR)/$(BASEIMAGE).built
+
 
 debug-buildmach: steamos_buildmach
 	docker run -ti --privileged --rm \
@@ -46,14 +42,29 @@ debug-buildmach: steamos_buildmach
 		--entrypoint /bin/bash \
 		steamos_buildmach -i
 
-$(BUILDDIR)/rootfs.tar.xz: steamos_buildmach
-	mkdir -p $(BUILDDIR)
+
+delete-baseimage:
+	@$(call check-confirm,Are you sure you want to delete your SteamOS base image ($(BASEIMAGE))?)
+	@echo
+	$(call clean-container,$(BASEIMAGE))
+	$(call clean-image,$(BASEIMAGE))
+	$(RM) $(BUILDDIR)/$(BASEIMAGE).built
+
+
+build-baseimage: $(BUILDDIR)/Dockerfile $(BUILDDIR)/rootfs.tar.xz
+	docker build -t $(BASEIMAGE) ./build
+
+
+$(BUILDDIR)/Dockerfile $(BUILDDIR)/rootfs.tar.xz: steamos_buildmach $(BUILDDIR)
 	@$(call check-new-container-msg,steamos_buildmach, \
-		"steamos_buildmach already exists. Please run \"make clean\" first.")
+		steamos_buildmach already exists. Please run \"make clean\" first.)
 	docker run -ti --privileged --rm \
 		--name steamos_buildmach \
 		-v "$(abspath $(BUILDDIR)):/root/steamos" steamos_buildmach \
 		"--variant=$(VARIANT)" "$(SUITE)" "$(STEAMREPO)"
 
-.PHONY: all clean distclean delete-steamos debug-buildmach steamos $(IMAGES)
+$(BUILDDIR):
+	mkdir -p $(BUILDDIR)
+
+.PHONY: all clean distclean baseimage build-baseimage delete-baseimage debug-buildmach $(IMAGES)
 

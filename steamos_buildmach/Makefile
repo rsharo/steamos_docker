@@ -1,22 +1,23 @@
 include ../functs.mk
 
-IMAGES= steamos_buildmach
-BUILTFILES = $(IMAGES:%=%.built)
+IMAGE= steamos_buildmach
+BUILTFILE = $(IMAGE:%=%.built)
 
-all: $(IMAGES)
+all: build
+
+build: $(IMAGE)
 
 distclean: clean
-	$(call clean-images,$(IMAGES))
-	$(RM) $(BUILTFILES)
+	$(call clean-image,$(IMAGE))
+	$(RM) $(BUILTFILE)
 
 clean:
-	$(call clean-containers,$(IMAGES))
+	$(call clean-container,$(IMAGE))
 
-$(IMAGES): % : %.built
+$(IMAGE): % : %.built
 
-$(BUILTFILES):
+$(BUILTFILE): Dockerfile
 	docker build -t $(@:%.built=%) .
 	docker inspect $(@:%.built=%) > $(@)
 
-
-.PHONY: all clean distclean $(IMAGES)
+.PHONY: all build clean distclean $(IMAGE)
