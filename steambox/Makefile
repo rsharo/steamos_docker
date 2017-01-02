@@ -34,7 +34,7 @@ clean:
 
 $(IMAGE): % : %.built
 
-$(BUILTFILE): Dockerfile
+$(BUILTFILE): Dockerfile show_motd
 	docker build -t $(@:%.built=%) \
 		--build-arg STEAMUSER_UID=$(STEAMUSER_UID) \
 		--build-arg STEAMUSER_GID=$(STEAMUSER_GID) .

@@ -1,0 +1,13 @@
+#!/bin/bash
+
+if [ -r /etc/motd ] ; then
+	cat /etc/motd
+fi
+
+cat << EOF
+
+** Run "steam" if you want to run the steam client.
+** You are a sudoer. Default password is "steamuser".
+EOF
+
+exec "${@}"
