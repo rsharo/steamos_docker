@@ -56,11 +56,16 @@ $(BUILTFILES):
 distclean: clean
 
 steambox: steambox/steambox.built
+
 steamos : steambox/steamos.built
+
 steamos_buildmach: steamos_buildmach/steamos_buildmach.built
 
 steambox/steambox.built: steamos/steamos.built
+
 steamos.built: steamos/rootfs.tar.xz
+
 steamos/rootfs.tar.xz: $(BUILDDIR)/rootfs.tar.xz
+
 $(BUILDDIR)/rootfs.tar.xz: steamos_buildmach/steamos_buildmach.built
 

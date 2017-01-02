@@ -1,15 +1,21 @@
 include ../functs.mk
 
-ifeq ("",$(STEAMUSER_UID))
+ifeq ("","$(STEAMUSER_UID)")
    $(error you must provide STEAMUSER_UID (the UID of the host account that will be running steamos) to proceed)
+else
+   $(info STEAMUSER_UID=$(STEAMUSER_UID))
 endif
 
-ifeq ("",$(STEAMUSER_GID))
+ifeq ("","$(STEAMUSER_GID)")
    $(error you must provide STEAMUSER_GID (the GID of the host account that will be running steamos) to proceed)
+else
+   $(info STEAMUSER_GID=$(STEAMUSER_GID))
 endif
 
-ifeq ("",$(STEAMUSER_HOME))
+ifeq ("","$(STEAMUSER_HOME)")
    $(error you must provide STEAMUSER_HOME (home directory of the host account that will be running steamos) to proceed)
+else
+   $(info STEAMUSER_HOME=$(STEAMUSER_HOME))
 endif
 
 IMAGES= steambox

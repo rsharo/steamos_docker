@@ -7,7 +7,8 @@ RUN apt-get -y install steam-launcher
 
 ARG STEAMUSER_UID
 ARG STEAMUSER_GID
-RUN adduser steamuser --uid $STEAMUSER_UID --gid $STEAMUSER_GID --shell /bin/bash --disabled-password --home /home/steamuser
+RUN groupadd --gid $STEAMUSER_GID steamuser
+RUN useradd steamuser --uid $STEAMUSER_UID --gid $STEAMUSER_GID --shell /bin/bash --home /home/steamuser
 
 USER steamuser
 WORKDIR /home/steamuser
