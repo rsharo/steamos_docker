@@ -12,11 +12,11 @@ distclean: clean
 clean:
 	$(call clean-containers,$(IMAGES))
 
-$(IMAGES): $(@:%=%.built)
+$(IMAGES): % : %.built
 
 $(BUILTFILES): 
-	docker build -t $@ .
-	docker inspect $@ > ${@:%=%.built)
+	docker build -t $(@:%.built=%) .
+	docker inspect $(@:%.built=%) > $(@)
 
 steamos.built: rootfs.tar.xz
 
