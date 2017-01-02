@@ -24,29 +24,38 @@ There are no provisions stopping the container from:
 EOF
 
 read -n 1 -t 20 -p "Are you sure you want to continue? [N/y] " response
+echo
 if [[ "${response}" != "y" ]]; then
 	echo "Exiting." >&2
 	exit 1
 fi
 
 
-STEAMHOME=${STEAMUSER_HOME}/steamhome
+STEAMHOME="${STEAMUSER_HOME}/steamhome"
 
-mkdir -p ${STEAMHOME}
+declare -a HOMEDIR_ARGS=( -v "${STEAMHOME}:/home/steamuser" )
 
-if [[ ! -e ${STEAMHOME}/.pulse ]] ; then
-	ln  ${STEAMUSER_HOME}/.pulse ${STEAMHOME}/steamhome/.pulse
+declare -a X11_ARGS=( -v /tmp/.X11-unix:/tmp/.X11-unix )
+
+declare -a ALSA_ARGS=( --device /dev/snd )
+
+declare -a PULSE_ARGS=(
+#	--device /dev/shm
+#	-v /etc/machine-id:/etc/machine-id:ro
+#	-v "/run/user/${STEAMUSER_UID}/pulse:/run/user/${STEAMUSER_UID}/pulse"
+#	-v /var/lib/dbus:/var/lib/dbus
+#	-v "${STEAMUSER_HOME}/.pulse:${STEAMHOME}/.pulse"
+)
+
+echo $0: Using args: "${HOMEDIR_ARGS[@]}" "${X11_ARGS[@]}" "${ALSA_ARGS[@]}" "${PULSE_ARGS[@]}"
+
+if [[ ! -d "${STEAMHOME}" ]] ; then
+	echo "$0: The steam home directory '${STEAMHOME}' does not exist or is not a directory. Please create it with the appropriate user permissions." 2>&1
+	exit 1
 fi
 
-docker run -ti --rm \
-	--name steambox \
-	-v /tmp/.X11-unix:/tmp/.X11-unix \
-	-v /dev/snd:/dev/snd \
-	-v /dev/shm:/dev/shm \
-	-v /etc/machine-id:/etc/machine-id \
-	-v /run/user/${STEAMUSER_UID}/pulse:/run/user/${STEAMUSER_UID}/pulse
-	-v /var/lib/dbus:/var/lib/dbus
-	-v $(STEAMHOME):/home/steamuser
-	--lxc-conf='lxc.cgroup.devices.allow = c 116:* rwm' \
+
+docker run -ti --rm --name steambox \
+	"${HOMEDIR_ARGS[@]}" "${X11_ARGS[@]}" "${ALSA_ARGS[@]}" "${PULSE_ARGS[@]}" \
 	steambox "$@"
 
