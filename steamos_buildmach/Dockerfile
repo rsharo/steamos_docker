@@ -32,7 +32,7 @@ RUN echo 'deb http://repo.steampowered.com/steamos brewmaster main contrib non-f
 
 # Tools for building docker images
 RUN apt-get update
-RUN apt-get -y install debootstrap
+RUN apt-get -y install debootstrap binutils
 RUN apt-get -y install docker-engine
 
 # Retrieve valve-archive-keyring.gpg

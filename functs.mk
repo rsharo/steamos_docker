@@ -56,4 +56,4 @@ check-new-container = docker ps -aq -f "name=$(1)" | xargs -r false
 # usage:
 #	$(call check-new-container,containerName,"Container exists. Please close it.")
 # 	docker run --name containerName ...
-check-new-container-msg = $(call check-new-container,$(1)) || ( echo "$(2)">&2 ; exit -1 )
+check-new-container-msg = $(call check-new-container,$(1)) || ( echo "$(2)">&2 ; false )
