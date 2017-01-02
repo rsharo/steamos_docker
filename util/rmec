@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Remove docker containers in the "exited" status"
+docker ps -aqf status=exited | xargs -r docker rm

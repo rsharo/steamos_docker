@@ -28,16 +28,25 @@ steamos_buildmach:
 
 
 delete-steamos:
-	$(call check-confirm,"Are you sure you want to delete your steamos container and image?"
+	@$(call check-confirm,"Are you sure you want to delete your steamos container and image?")
 	@echo
 	$(call clean-container,$(NAME))
 	$(call clean-image,$(NAME))
 
+debug-buildmach: steamos_buildmach
+	docker run -ti --privileged --rm \
+		-v "$(abspath $(BUILDDIR)):/root/steamos" \
+		--entrypoint /bin/bash \
+		steamos_buildmach -i
+
 
 $(BUILDDIR)/rootfs.tar.xz: steamos_buildmach
 	mkdir -p $(BUILDDIR)
-	docker run -ti --privileged --name steamos_buildmach \
+	@$(call check-new-container-msg,steamos_buildmach, \
+		"steamos_buildmach already exists. Please run \"make clean\" first.")
+	docker run -ti --privileged --rm \
+		--name steamos_buildmach \
 		-v "$(abspath $(BUILDDIR)):/root/steamos" steamos_buildmach \
 		"--variant=$(VARIANT)" "$(SUITE)" "$(STEAMREPO)"
 
-.PHONY: all clean distclean delete-steamos $(IMAGES) 
+.PHONY: all clean distclean delete-steamos debug-buildmach $(IMAGES)

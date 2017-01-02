@@ -26,7 +26,8 @@ RUN echo 'deb https://apt.dockerproject.org/repo debian-jessie main' > /etc/apt/
 # **IMPORTANT**  If this script fails on the "--fingerprint" line , you may have a falsified key!
 RUN apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-keys 7DEEB7438ABDDD96
 RUN apt-key adv --fingerprint 8abddd96 | grep "Key fingerprint = 48FD 4330 8E37 C3A4 18B9  2A15 7DEE B743 8ABD DD96"
-RUN echo 'deb http://repo.steampowered.com/steamos brewmaster main contrib non-free' > /etc/apt/sources.list.d/valve.list
+RUN echo 'deb http://repo.steampowered.com/steamos alchemist main contrib non-free' > /etc/apt/sources.list.d/alchemist.list
+RUN echo 'deb http://repo.steampowered.com/steamos brewmaster main contrib non-free' > /etc/apt/sources.list.d/brewmaster.list
 
 
 # Tools for building docker images
