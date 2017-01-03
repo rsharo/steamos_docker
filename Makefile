@@ -1,6 +1,7 @@
 include functs.mk
 
 # Build parameters
+export DOCKER ?= docker
 export SUITE ?= brewmaster
 export VARIANT ?= minbase
 export STEAMREPO ?= http://repo.steampowered.com/steamos
@@ -33,11 +34,11 @@ $(BUILDDIR)/$(BASEIMAGE).built: $(BUILDDIR)
 		echo "Building baseimage $(BASEIMAGE)..." ; \
 		$(MAKE) build-baseimage ; \
 	fi
-	docker inspect $(BASEIMAGE) > $(BUILDDIR)/$(BASEIMAGE).built
+	$(DOCKER) inspect $(BASEIMAGE) > $(BUILDDIR)/$(BASEIMAGE).built
 
 
 debug-buildmach: steamos_buildmach
-	docker run -ti --privileged --rm \
+	$(DOCKER) run -ti --privileged --rm \
 		-v "$(abspath $(BUILDDIR)):/root/steamos" \
 		--entrypoint /bin/bash \
 		steamos_buildmach -i
@@ -52,13 +53,13 @@ delete-baseimage:
 
 
 build-baseimage: $(BUILDDIR)/Dockerfile $(BUILDDIR)/rootfs.tar.xz
-	docker build -t $(BASEIMAGE) ./build
+	$(DOCKER) build -t $(BASEIMAGE) ./build
 
 
 $(BUILDDIR)/Dockerfile $(BUILDDIR)/rootfs.tar.xz: steamos_buildmach $(BUILDDIR)
 	@$(call check-new-container-msg,steamos_buildmach, \
 		steamos_buildmach already exists. Please run \"make clean\" first.)
-	docker run -ti --privileged --rm \
+	$(DOCKER) run -ti --privileged --rm \
 		--name steamos_buildmach \
 		-v "$(abspath $(BUILDDIR)):/root/steamos" steamos_buildmach \
 		"--variant=$(VARIANT)" "$(SUITE)" "$(STEAMREPO)"

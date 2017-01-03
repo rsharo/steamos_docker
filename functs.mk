@@ -11,21 +11,21 @@ map1arg = $(foreach a,$(2),$(call $(1),$(a)))
 # Remove containers from docker daemon
 # usage:
 # 	$(call clean-container,myContainerName)
-clean-container = docker ps -aq -f "name=$(1)" | xargs -r docker rm -f
+clean-container = $(DOCKER) ps -aq -f "name=$(1)" | xargs -r $(DOCKER) rm -f
 
 
 #
 # Remove images from docker daemon
 # usage:
 # 	$(call clean-image, myImageName)
-clean-image = docker images -q "$(1)" | xargs -r docker rmi -f
+clean-image = $(DOCKER) images -q "$(1)" | xargs -r $(DOCKER) rmi -f
 
 
 #
 # Remove volumes from docker daemon
 # usage: 
 # 	$(call clean-volume, myVolumeName)
-clean-volume = docker volume ls -qf "name=$(1)" | xargs -r docker volume rm
+clean-volume = $(DOCKER) volume ls -qf "name=$(1)" | xargs -r $(DOCKER) volume rm
 
 
 #
@@ -40,8 +40,8 @@ check-confirm = bash -c 'read -n 1 -t 20 -p "$(1) [y/N] " response ; [[ "$$respo
 # Return fail code if container already exists
 # usage:
 #	@$(call check-new-container,containerName)
-#	docker run --name containerName ...
-check-new-container = docker ps -aq -f "name=$(1)" | xargs -r false
+#	$(DOCKER) run --name containerName ...
+check-new-container = $(DOCKER) ps -aq -f "name=$(1)" | xargs -r false
 
 
 #
@@ -49,9 +49,9 @@ check-new-container = docker ps -aq -f "name=$(1)" | xargs -r false
 # usage:
 #	@if ( $(call check-new-image,$(IMAGE)) ) ; then \
 #		echo "Building $(IMAGE)..." ; \
-#		docker build -t $(IMAGE) $(IMAGE) ; \
+#		$(DOCKER) build -t $(IMAGE) $(IMAGE) ; \
 #	fi
-check-new-image = docker images -q "$(1)" | xargs -r false
+check-new-image = $(DOCKER) images -q "$(1)" | xargs -r false
 
 
 #
@@ -69,7 +69,7 @@ check-new-containers = $(call check-new-container,$(1))
 # Variants that print an error message on failure
 # usage:
 #	@$(call XXX-msg,arg,"ERROR: command failed.")
-#	docker build ...
+#	$(DOCKER) build ...
 call-with-msg = ( $(call $(1),$(2)) ) || ( echo $(3)>&2 ; false )
 check-new-container-msg = $(call call-with-msg,check-new-container,$(1),$(2))
 check-new-containers-msg = $(call call-with-msg,check-new-containers,$(1),$(2))

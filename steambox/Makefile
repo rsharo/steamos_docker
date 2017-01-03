@@ -37,12 +37,12 @@ clean:
 $(IMAGE): % : %.built
 
 $(BUILTFILE): Dockerfile show_motd $(BOOTSTRAP_STEAMDEPS) Makefile
-	docker build -t $(@:%.built=%) \
+	$(DOCKER) build -t $(@:%.built=%) \
 		--build-arg "STEAMUSER_UID=$(STEAMUSER_UID)" \
 		--build-arg "STEAMUSER_GID=$(STEAMUSER_GID)" \
 		--build-arg "BOOTSTRAP_STEAMDEPS=$(BOOTSTRAP_STEAMDEPS)" \
 		.
-	docker inspect $(@:%.built=%) > $(@)
+	$(DOCKER) inspect $(@:%.built=%) > $(@)
 
 .PHONY: all build clean distclean $(IMAGE)
 
