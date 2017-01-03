@@ -38,7 +38,7 @@ all | Equivalent to `steambox`
 steambox | Builds the `steambox` image and all dependencies
 baseimage | Builds the SteamOS minbase Docker base image
 build-baseimage | Forcibly rebuilds `baseimage` even if you already have one
-delete-baseimage | Deletes all `baseimage` containers and local repository images *asks for confirmation*
+delete-baseimage | Deletes all `baseimage` containers and local repository images. *NOTE: asks for confirmation*
 steamos_buildmach | Builds `steamos_buildmach`: a Debian image that can build SteamOS base images
 debug-buildmach | Runs `steamos_buildmach` with bash tty.
 clean | Equivalent to `docker rm -f steamos_buildmach ; docker rm -f brewmaster steambox`.
