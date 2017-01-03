@@ -1,5 +1,6 @@
 include ../functs.mk
 
+DOCKER ?= docker
 IMAGE= steamos_buildmach
 BUILTFILE = $(IMAGE:%=%.built)
 

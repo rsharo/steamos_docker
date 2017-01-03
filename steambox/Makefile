@@ -20,6 +20,7 @@ else
    $(info STEAMUSER_HOME=$(STEAMUSER_HOME))
 endif
 
+DOCKER ?= docker
 IMAGE= steambox
 BUILTFILE = $(IMAGE:%=%.built)
 
