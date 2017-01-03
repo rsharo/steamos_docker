@@ -42,7 +42,7 @@ delete-baseimage | Deletes all `baseimage` containers and local repository image
 steamos_buildmach | Builds `steamos_buildmach`: a Debian image that can build SteamOS base images
 debug-buildmach | Runs `steamos_buildmach` with bash tty.
 clean | Equivalent to `docker rm -f steamos_buildmach steambox`.
-distclean | Removes all containers, images, and build artifacts **including** `steambox`
+distclean | Removes `steambox`, `buildmach`, and build artifacts.  Retains the baseimage.
 
 
 ## Makefile Build Parameters
