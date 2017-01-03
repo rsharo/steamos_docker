@@ -49,10 +49,10 @@ distclean | Removes all containers, images, and build artifacts **including** `s
 
 Parameter | Default | Description
 ----------|---------|-------------
-STEAMUSER_UID | *none* | The user id of the user that will be running Steam.  Required for the `steambox` target only.
-STEAMUSER_GID | *none* | The group id of the user that will be running Steam.  Required for the `steambox` target only.
-STEAMUSER_HOME | *none* | The home directory of the user that will be running Steam.  Required for the `steambox` target only.
-BASEIMAGE | `$(SUITE)` | Name of the final SteamOS base image in your local repository
+STEAMUSER_UID | *none* | The user id of the *host* user running Steam.  Required for the `steambox` target only.
+STEAMUSER_GID | *none* | The group id of the *host* user running Steam.  Required for the `steambox` target only.
+STEAMUSER_HOME | *none* | The home directory of the *host* user running Steam.  Required for the `steambox` target only.
+BASEIMAGE | `$(SUITE)` | Docker repository name for the final SteamOS base image
 SUITE | brewmaster | SteamOS version to build
 VARIANT | minbase | [debootstrap](https://wiki.debian.org/Debootstrap) variant of SteamOS to build
 STEAMREPO | http://repo.steampowered.com/steamos | Where to get the SteamOS binaries
