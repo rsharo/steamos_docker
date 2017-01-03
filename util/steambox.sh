@@ -51,11 +51,11 @@ declare -a X11_ARGS=(
 declare -a ALSA_ARGS=( --device /dev/snd )
 
 declare -a PULSE_ARGS=(
-#	--device /dev/shm
-#	-v /etc/machine-id:/etc/machine-id:ro
-#	-v "/run/user/${STEAMUSER_UID}/pulse:/run/user/${STEAMUSER_UID}/pulse"
-#	-v /var/lib/dbus:/var/lib/dbus
-#	-v "${STEAMUSER_HOME}/.pulse:${STEAMHOME}/.pulse"
+	-v /dev/shm:/dev/shm
+	-v /etc/machine-id:/etc/machine-id:ro
+	-v "/run/user/${STEAMUSER_UID}/pulse:/run/user/${STEAMUSER_UID}/pulse"
+	-v /var/lib/dbus:/var/lib/dbus
+	-v "${STEAMUSER_HOME}/.pulse:${STEAMHOME}/.pulse"
 )
 
 echo $0: Using args: "${HOMEDIR_ARGS[@]}" "${X11_ARGS[@]}" "${ALSA_ARGS[@]}" "${PULSE_ARGS[@]}"
