@@ -56,4 +56,5 @@ BASEIMAGE | `$(SUITE)` | Docker repository name for the final SteamOS base image
 SUITE | brewmaster | SteamOS version to build
 VARIANT | minbase | [debootstrap](https://wiki.debian.org/Debootstrap) variant of SteamOS to build
 STEAMREPO | http://repo.steampowered.com/steamos | Where to get the SteamOS binaries
+DOCKER | docker | The program used to control the docker daemon
 
