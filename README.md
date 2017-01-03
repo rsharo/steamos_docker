@@ -1,7 +1,18 @@
 # steamos_docker
 Builds a [SteamOS](http://store.steampowered.com/steamos/) [docker](https://www.docker.com/) image directly from Valve repositories. *(for the paranoid.)*
 
-> **[TL;DR]**  Run `make && make distclean` as root. You'll end up with a docker image named `steamos:latest`.  Use it as a base image or run `docker run -ti --name steamos steamos` to experiment with it.  You must have docker installed first, of course.
+> **[TL;DR]**  From an account with Docker privileges (e.g. root), run the following:
+> ```
+export STEAMUSER_UID=$(id -u ${USER})
+export STEAMUSER_GID=$(id -g ${USER})
+export STEAMUSER_HOME=~${USER}
+mkdir -p ~${USER}/steamhome && chown ${USER}:${USER} ${USER}/steamhome
+util/steambox.sh
+```
+>
+>You'll build and launch a docker image named `steambox`.  Type `steam` to run the steam launcher.
+>
+>*Note: still working to streamline this process*
 
 
 Currently configured to build SteamOS `brewmaster`.  Other suites are untested.
@@ -10,32 +21,39 @@ Currently configured to build SteamOS `brewmaster`.  Other suites are untested.
 All binaries are pulled from http://repo.steampowered.com/steamos using gpg keys from `hkp://ha.pool.sks-keyservers.net:80`.
 
 
-The filesystem build runs as root inside a container built from the official `debian:jessie` base image.  Once the SteamOS file tree is built, it is pulled from the container and installed onto the Docker host with `docker build`.
+The filesystem build runs as root inside a bootstrap container [FROM](https://docs.docker.com/engine/reference/builder/#/from) the official `debian:jessie` base image.  Once the SteamOS file tree is built, it is pulled from the container and installed onto the Docker host with `docker build`.
 
 Run "make" (as root) to:
   1. Create a build machine based on `debian:jessie`, called `steamos_buildmach`
-  2. Load all dependencies needed to build a SteamOS image
-  3. Run the `steamos_buildmach` producing a SteamOS root file system in the `./build/` directory
-  4. Build `steamos` image on host
+  2. Load all dependencies needed to bootstrap a SteamOS image
+  3. Run a `steamos_buildmach` container, producing a SteamOS root file system
+  4. Build a `$(SUITE)` SteamOS *(minbase)* base image, where `$(SUITE)` defaults to `brewmaster`
+  4. Build `steambox` image that can actually run the steam launcher
 
 ## Makefile Targets
 
 Target | Description
---------------|--------
-all | equivalent to "steamos" target
-steamos | Builds the `steamos` image (plus build dependencies)
-steamos_buildmach | Builds `steamos_buildmach`: the Debian machine that can build `steamos` images.
+-------|--------
+all | Equivalent to `steambox`
+steambox | Builds the `steambox` image and all dependencies
+baseimage | Builds the SteamOS minbase Docker base image
+build-baseimage | Forcibly rebuilds `baseimage` even if you already have one
+delete-baseimage | Deletes all `baseimage` containers and local repository images *asks for confirmation*
+steamos_buildmach | Builds `steamos_buildmach`: a Debian image that can build SteamOS base images
 debug-buildmach | Runs `steamos_buildmach` with bash tty.
-clean | Removes any pre-existing `steamos_buildmach` container.  Equivalent to `docker rm -f steamos_buildmach`
-distclean | Removes `steamos_buildmach` container and image. Does not touch any `steamos` images.
-delete-steamos | Removes the `steamos` container and image specified by `NAME`.  *Use at your own risk!*
+clean | Equivalent to `docker rm -f steamos_buildmach ; docker rm -f brewmaster steambox`.
+distclean | Removes all containers, images, and build artifacts **including** `steambox`
+
 
 ## Makefile Build Parameters
 
 Parameter | Default | Description
------------------------|---------|-------------
-NAME | brewmaster | Name of the final Docker image
-SUITE | brewmaster | SteamOS version
+----------|---------|-------------
+STEAMUSER_UID | *none* | The user id of the user that will be running Steam.  Required for the `steambox` target only.
+STEAMUSER_GID | *none* | The group id of the user that will be running Steam.  Required for the `steambox` target only.
+STEAMUSER_HOME | *none* | The home directory of the user that will be running Steam.  Required for the `steambox` target only.
+BASEIMAGE | `$(SUITE)` | Name of the final SteamOS base image in your local repository
+SUITE | brewmaster | SteamOS version to build
 VARIANT | minbase | [debootstrap](https://wiki.debian.org/Debootstrap) variant of SteamOS to build
-STEAMREPO | http://repo.steampowered.com/steamos | Where to get the binaries
+STEAMREPO | http://repo.steampowered.com/steamos | Where to get the SteamOS binaries
 
