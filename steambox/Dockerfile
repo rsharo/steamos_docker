@@ -5,7 +5,7 @@ RUN apt-get -y dist-upgrade
 RUN apt-get -y install steam-launcher
 RUN apt-get -y install sudo vim less
 RUN apt-get -y install iceweasel
-RUN apt-get -y install pulseaudio
+RUN apt-get -y install pulseaudio firmware-linux-nonfree
 
 ARG BOOTSTRAP_STEAMDEPS=bootstrap_steamdeps.txt
 ADD "${BOOTSTRAP_STEAMDEPS}" /root/steambox/bootstrap_steamdeps.txt

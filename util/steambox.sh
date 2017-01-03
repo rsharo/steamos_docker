@@ -43,8 +43,10 @@ STEAMHOME="${STEAMUSER_HOME}/steamhome"
 
 declare -a HOMEDIR_ARGS=( -v "${STEAMHOME}:/home/steamuser" )
 
+declare -a DRIDEVS=(/dev/dri/*)
 declare -a X11_ARGS=(
 	-v /tmp/.X11-unix:/tmp/.X11-unix
+	${DRIDEVS[@]/#/--device }
 	--env "DISPLAY=${STEAMUSER_DISPLAY}"
 )
 
@@ -66,10 +68,7 @@ if [[ ! -d "${STEAMHOME}" ]] ; then
 fi
 
 
-docker run -ti --rm --name steambox \
+${DOCKER:-docker} run -ti --rm --name steambox \
 	"${HOMEDIR_ARGS[@]}" "${X11_ARGS[@]}" "${ALSA_ARGS[@]}" "${PULSE_ARGS[@]}" \
 	steambox "$@"
-
-
-### functions
 
