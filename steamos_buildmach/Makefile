@@ -16,7 +16,7 @@ clean:
 
 $(IMAGE): % : %.built
 
-$(BUILTFILE): Dockerfile
+$(BUILTFILE): Dockerfile Makefile
 	docker build -t $(@:%.built=%) .
 	docker inspect $(@:%.built=%) > $(@)
 
