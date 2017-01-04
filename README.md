@@ -7,7 +7,8 @@ export STEAMUSER_UID=$(id -u ${USER})
 export STEAMUSER_GID=$(id -g ${USER})
 export STEAMUSER_HOME=~${USER}
 mkdir -p ~${USER}/steamhome && chown ${USER}:${USER} ${USER}/steamhome
-util/steambox.sh
+make
+util/steambox
 ```
 >
 >You'll build and launch a docker image named `steambox`.  Type `steam` to run the steam launcher.

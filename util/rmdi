@@ -1,4 +1,4 @@
 #!/bin/bash
 
 # Remove dangling docker images
-docker images -qf dangling=true | xargs -r docker rmi
+${DOCKER:-docker} images -qf dangling=true | xargs -r ${DOCKER:-docker} rmi
