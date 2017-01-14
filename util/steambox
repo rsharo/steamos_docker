@@ -43,14 +43,21 @@ STEAMHOME="${STEAMUSER_HOME}/steamhome"
 
 declare -a HOMEDIR_ARGS=( -v "${STEAMHOME}:/home/steamuser" )
 
-declare -a DRIDEVS=(/dev/dri/*)
+declare -a DRIDEVS=()
+if [[ -d /dev/dri ]] ; then
+	DRIDEVS+=(/dev/dri/*)
+fi
+if [[ -d /dev/ati ]] ; then 
+	DRIDEVS+=(/dev/ati/*)
+fi
+
 declare -a X11_ARGS=(
 	-v /tmp/.X11-unix:/tmp/.X11-unix
 	${DRIDEVS[@]/#/--device }
 	--env "DISPLAY=${STEAMUSER_DISPLAY}"
 )
 
-declare -a ALSA_ARGS=( --device /dev/snd )
+declare -a ALSA_ARGS=($(find /dev/snd -type c -printf "--device %p "))
 
 declare -a PULSE_ARGS=(
 	-v /dev/shm:/dev/shm
