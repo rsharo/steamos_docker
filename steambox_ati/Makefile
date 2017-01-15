@@ -22,8 +22,10 @@ pre-driver-install: Dockerfile.1 Makefile $(DRIVERFILE)
 	$(DOCKER) build -t steambox_ati:preinstall --build-arg DRIVERFILE=$(DRIVERFILE) -f Dockerfile.1 .
 
 $(BUILTFILE): Dockerfile Makefile pre-driver-install
-	$(DOCKER) run -ti --name steambox_ati -v /tmp/.X11-unix:/tmp/.X11-unix --entrypoint /bin/bash \
-		-u root steambox_ati:preinstall /tmp/$(DRIVERFILE) --install --force
+	$(DOCKER) run -ti --name steambox_ati \
+		-v /tmp/.X11-unix:/tmp/.X11-unix \
+		--env DRIVERFILE=$(DRIVERFILE) \
+		steambox_ati:preinstall
 	$(DOCKER) commit steambox_ati steambox_ati:postinstall
 	$(DOCKER) rm steambox_ati
 	$(DOCKER) build -t $(@:%.built=%) .

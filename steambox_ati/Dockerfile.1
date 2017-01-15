@@ -12,6 +12,6 @@ ADD ${DRIVERFILE} /tmp/${DRIVERFILE}
 # The following requires X11 to be active, so you have to do it from a "docker run" invocation
 #RUN /tmp/${DRIVERFILE} --install --force && rm /tmp/${DRIVERFILE}
 
-ENTRYPOINT [ "/bin/bash",  ]
-CMD [ "-c", "./${DRIVERFILE} --install --force && rm /tmp/${DRIVERFILE" ]
+ENTRYPOINT [ "/bin/bash" ]
+CMD [ "-c", "./${DRIVERFILE} --install --force && rm /tmp/${DRIVERFILE}" ]
 
