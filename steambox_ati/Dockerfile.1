@@ -1,0 +1,17 @@
+FROM steambox:latest
+MAINTAINER rsharo "rsharo@users.noreply.github.com"
+
+USER root
+WORKDIR /tmp
+
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install xserver-xorg pciutils
+
+ARG DRIVERFILE
+ADD ${DRIVERFILE} /tmp/${DRIVERFILE}
+
+# The following requires X11 to be active, so you have to do it from a "docker run" invocation
+#RUN /tmp/${DRIVERFILE} --install --force && rm /tmp/${DRIVERFILE}
+
+ENTRYPOINT [ "/bin/bash",  ]
+CMD [ "-c", "./${DRIVERFILE} --install --force && rm /tmp/${DRIVERFILE" ]
+

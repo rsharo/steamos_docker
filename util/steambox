@@ -33,6 +33,7 @@ EOF
 
 disclaimer $0
 
+STEAMBOX=${STEAMBOX:-"steambox"}
 STEAMUSER_DISPLAY=${STEAMUSER_DISPLAY:-":0"}
 
 echo STEAMUSER_UID=${STEAMUSER_UID:?"$0: you must set the environment variable STEAMUSER_UID"}
@@ -75,7 +76,7 @@ if [[ ! -d "${STEAMHOME}" ]] ; then
 fi
 
 
-${DOCKER:-docker} run -ti --rm --name steambox \
+${DOCKER:-docker} run -ti --rm --name "${STEAMBOX}" \
 	"${HOMEDIR_ARGS[@]}" "${X11_ARGS[@]}" "${ALSA_ARGS[@]}" "${PULSE_ARGS[@]}" \
-	steambox "$@"
+	"${STEAMBOX}" "$@"
 

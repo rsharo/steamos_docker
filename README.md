@@ -44,6 +44,7 @@ steamos_buildmach | Builds `steamos_buildmach`: a Debian image that can build St
 debug-buildmach | Runs `steamos_buildmach` with bash tty.
 clean | Equivalent to `docker rm -f steamos_buildmach steambox`.
 distclean | Removes `steambox`, `buildmach`, and build artifacts.  Retains the baseimage.
+steambox_ati | Builds `steambox_ati`: a derivative of `steambox` with support for ATI video cards.
 
 
 ## Makefile Build Parameters
@@ -58,4 +59,5 @@ SUITE | brewmaster | SteamOS version to build
 VARIANT | minbase | [debootstrap](https://wiki.debian.org/Debootstrap) variant of SteamOS to build
 STEAMREPO | http://repo.steampowered.com/steamos | Where to get the SteamOS binaries
 DOCKER | docker | The program used to control the docker daemon
+DRIVERFILE | AMD-Catalyst-15.9-Linux-installer-15.201.1151-x86.x86_64.run | **ATI build only** The video driver installer (you must download it into `steambox_ati`)
 
