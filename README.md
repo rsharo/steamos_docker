@@ -5,7 +5,7 @@ Builds a [SteamOS](http://store.steampowered.com/steamos/) [docker](https://www.
 > ```
 export STEAMUSER_UID=$(id -u ${USER})
 export STEAMUSER_GID=$(id -g ${USER})
-export STEAMUSER_HOME=~${USER}
+export STEAMUSER_HOME=${HOME}
 mkdir -p ~${USER}/steamhome && chown ${USER}:${USER} ${USER}/steamhome
 make
 util/steambox

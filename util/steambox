@@ -37,7 +37,7 @@ STEAMBOX=${STEAMBOX:-"steambox"}
 STEAMUSER_DISPLAY=${STEAMUSER_DISPLAY:-":0"}
 
 echo STEAMUSER_UID=${STEAMUSER_UID:?"$0: you must set the environment variable STEAMUSER_UID"}
-echo STEAMUSER_HOME=${STEAMUSER_UID:?"$0: you must set the environment variable STEAMUSER_HOME"}
+echo STEAMUSER_HOME=${STEAMUSER_HOME:?"$0: you must set the environment variable STEAMUSER_HOME"}
 echo STEAMUSER_DISPLAY=${STEAMUSER_DISPLAY}
 
 STEAMHOME="${STEAMUSER_HOME}/steamhome"
@@ -65,7 +65,7 @@ declare -a PULSE_ARGS=(
 	-v /etc/machine-id:/etc/machine-id:ro
 	-v "/run/user/${STEAMUSER_UID}/pulse:/run/user/${STEAMUSER_UID}/pulse"
 	-v /var/lib/dbus:/var/lib/dbus
-	-v "${STEAMUSER_HOME}/.pulse:${STEAMHOME}/.pulse"
+	-v "${STEAMUSER_HOME}/.pulse:/home/steamuser/.pulse"
 )
 
 echo $0: Using args: "${HOMEDIR_ARGS[@]}" "${X11_ARGS[@]}" "${ALSA_ARGS[@]}" "${PULSE_ARGS[@]}"
