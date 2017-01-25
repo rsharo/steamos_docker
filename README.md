@@ -3,10 +3,11 @@ Builds a [SteamOS](http://store.steampowered.com/steamos/) [docker](https://www.
 
 > **[TL;DR]**  From an account with Docker privileges (e.g. root), run the following:
 > ```
-export STEAMUSER_UID=$(id -u ${USER})
-export STEAMUSER_GID=$(id -g ${USER})
-export STEAMUSER_HOME=~${USER}
-mkdir -p ~${USER}/steamhome && chown ${USER}:${USER} ${USER}/steamhome
+XUSER=<the user account you log into X with>
+export STEAMUSER_UID=$(id -u ${XUSER})
+export STEAMUSER_GID=$(id -g ${XUSER})
+export STEAMUSER_HOME=$(grep "${XUSER}" /etc/passwd | cut -f6 -d:)
+mkdir ${STEAMUSER_HOME}/steamhome && chown ${XUSER}:${XUSER} ${XUSER}/steamhome
 make
 util/steambox
 ```
