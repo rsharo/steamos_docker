@@ -32,6 +32,7 @@ Run "make" (as root) to:
   4. Build a `$(SUITE)` SteamOS *(minbase)* base image, where `$(SUITE)` defaults to `brewmaster`
   4. Build `steambox` image that can actually run the steam launcher
 
+
 ## Makefile Targets
 
 Target | Description
@@ -46,6 +47,7 @@ debug-buildmach | Runs `steamos_buildmach` with bash tty.
 clean | Equivalent to `docker rm -f steamos_buildmach steambox`.
 distclean | Removes `steambox`, `buildmach`, and build artifacts.  Retains the baseimage.
 steambox_ati | Builds `steambox_ati`: a derivative of `steambox` with support for ATI video cards.
+steambox_nvidia | Builds `steambox_nvidia`: a derivative of `steambox` with support for NVIDIA video cards.
 
 
 ## Makefile Build Parameters
@@ -62,3 +64,8 @@ STEAMREPO | http://repo.steampowered.com/steamos | Where to get the SteamOS bina
 DOCKER | docker | The program used to control the docker daemon
 DRIVERFILE | AMD-Catalyst-15.9-Linux-installer-15.201.1151-x86.x86_64.run | **ATI build only** The video driver installer (you must download it into `steambox_ati`)
 
+
+## Running the driver-specific builds
+```
+STEAMBOX=steambox_nvidia ./util/steambox
+```
