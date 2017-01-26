@@ -48,8 +48,11 @@ declare -a DRIDEVS=()
 if [[ -d /dev/dri ]] ; then
 	DRIDEVS+=(/dev/dri/*)
 fi
-if [[ -d /dev/ati ]] ; then 
+if [[ -d /dev/ati ]] ; then
 	DRIDEVS+=(/dev/ati/*)
+fi
+if [[ -e /dev/nvidiactl ]] ; then
+	DRIDEVS+=(/dev/nvidia*)
 fi
 
 declare -a X11_ARGS=(
