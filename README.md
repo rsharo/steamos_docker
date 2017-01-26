@@ -65,7 +65,7 @@ DOCKER | docker | The program used to control the docker daemon
 DRIVERFILE | AMD-Catalyst-15.9-Linux-installer-15.201.1151-x86.x86_64.run | **ATI build only** The video driver installer (you must download it into `steambox_ati`)
 
 
-## Running the driver-specific builds
+## Running The Driver-Specific Builds
 ```
 STEAMBOX=steambox_nvidia ./util/steambox
 ```
