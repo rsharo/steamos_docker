@@ -10,13 +10,16 @@
 function disclaimer() {
 	cat << EOF
 $0: WARNING: This script launches a steambox Docker container with
-unrestricted access to your X session and audio drivers.
+unrestricted access to your X session, audio drivers, and dbus.
 
 There are no provisions stopping the container from:
    1) Showing you spoofed windows, including prompts to enter your password.
    2) Accessing your microphone
    3) Capturing mouse gestures and/or keystrokes
-   4) Playing polka music or even worse... Justin Bieber.
+   4) Sending commands to other desktop applications via dbus
+   5) Reading (but not changing) your machine-id
+   6) Accessing shared memory
+   7) Playing polka music or even worse... Justin Bieber.
 
 EOF
 
