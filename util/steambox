@@ -51,9 +51,11 @@ fi
 if [[ -d /dev/ati ]] ; then
 	DRIDEVS+=(/dev/ati/*)
 fi
-if [[ -e /dev/nvidiactl ]] ; then
-	DRIDEVS+=(/dev/nvidia*)
-fi
+for cdev in nvidiactl nvidia0 nvidia-modeset; do
+    if [[ -c /dev/${cdev} ]] ; then
+	    DRIDEVS+=(/dev/${cdev})
+    fi
+done
 
 declare -a X11_ARGS=(
 	-v /tmp/.X11-unix:/tmp/.X11-unix
