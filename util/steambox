@@ -54,7 +54,7 @@ fi
 if [[ -d /dev/ati ]] ; then
 	DRIDEVS+=(/dev/ati/*)
 fi
-for cdev in nvidiactl nvidia-modeset nvidia[0-9]; do
+for cdev in nvidiactl nvidia0 nvidia-modeset; do
     if [[ -c /dev/${cdev} ]] ; then
 	    DRIDEVS+=(/dev/${cdev})
     fi
