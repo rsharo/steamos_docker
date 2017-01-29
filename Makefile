@@ -8,12 +8,14 @@ export STEAMREPO ?= http://repo.steampowered.com/steamos
 export BASEIMAGE ?= $(SUITE)
 export STEAMUSER_UID STEAMUSER_GID STEAMUSER_HOME
 
-IMAGES= steambox_ati steambox steamos_buildmach
+IMAGES= steambox_ati steambox_nvidia steambox steamos_buildmach
 BUILDDIR=./build
 
 all: steambox
 
 steambox_ati: steambox
+
+steambox_nvidia: steambox
 
 steambox: baseimage
 
