@@ -1,7 +1,7 @@
 # steamos_docker
 Builds a [SteamOS](http://store.steampowered.com/steamos/) [docker](https://www.docker.com/) image directly from Valve repositories. *(for the paranoid.)*
 
-> **[TL;DR]**  From an account with Docker privileges (e.g. root), run the following:
+> **[TL;DR]  Requires Docker 1.13 or later.**  From an account with Docker privileges (e.g. root), run the following:
 > ```
 XUSER=<the user account you log into X with>
 export STEAMUSER_UID=$(id -u ${XUSER})
